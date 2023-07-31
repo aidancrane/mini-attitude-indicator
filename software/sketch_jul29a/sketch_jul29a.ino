@@ -2,6 +2,7 @@
 #include <Wire.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
+#include <Math.h>
 
 #define SCREEN_WIDTH 128 // OLED display width, in pixels
 #define SCREEN_HEIGHT 64 // OLED display height, in pixels
@@ -17,6 +18,10 @@ Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT,
 
 
 int COUNT = 0; //res 10
+
+float ROLL = 0;
+float PITCH = 0;
+float YAW = 0;
 
 void setup() {
 
@@ -44,13 +49,6 @@ void setup() {
   display.println(F("Hello World 123"));
   Serial.println(F("Hello World"));
 
-  // Draw a ball
-  int ballCenterX = SCREEN_WIDTH / 2;  // X coordinate of the ball's center
-  int ballCenterY = SCREEN_HEIGHT / 2; // Y coordinate of the ball's center
-  int ballRadius = 10;                 // Radius of the ball in pixels
-  display.drawCircle(ballCenterX, ballCenterY, ballRadius, SSD1306_WHITE);
-
-
 }
 
 void loop() {
@@ -59,38 +57,55 @@ void loop() {
   display.clearDisplay();
 
    // Generate random Euler angles and display them on the screen
-  displayRandomEulerAngles();
+  generateRandomEulerAngles();
+
+  calculatePitch();
+
+  displayXYZ();
 
   // Display the content on the screen
   display.display();
 
+  delay(1000);
+
 }
 
-void displayRandomEulerAngles() {
-  float roll = random(-90, 91);  // Generate random roll angle between -90 and 90 degrees
-  float pitch = random(-90, 91); // Generate random pitch angle between -90 and 90 degrees
-  float yaw = random(0, 361);    // Generate random yaw angle between 0 and 360 degrees
+void displayXYZ() {
 
-  // // Clear the previous text by drawing a filled rectangle over the area
-  // display.fillRect(0, 24, SCREEN_WIDTH, 24, SSD1306_BLACK);
-
-  // Set cursor position to (0, 24) for displaying Euler angles
-  display.setCursor(0, 24);
-
+  display.setCursor(0, 0);
   // Print the Euler angles to the display
   display.print(F("Roll: "));
-  display.println(roll);
+  display.println(ROLL);
 
   display.print(F("Pitch: "));
-  display.println(pitch);
+  display.println(PITCH);
 
   display.print(F("Yaw: "));
-  display.println(yaw);
+  display.println(YAW);
 
   display.print(F("Count: "));
   display.println(COUNT);
+}
+
+void calculatePitch() {
+
+  float roll  = (-PITCH * M_PI) / 180.0;
+  float cosroll = cos(roll);
+
+  Serial.println(roll);
+
+  display.drawLine(0, roll, SCREEN_WIDTH, roll, SSD1306_WHITE);
+
+}
+
+
+void generateRandomEulerAngles() {
+  ROLL = random(-90, 91);  // Generate random roll angle between -90 and 90 degrees
+  PITCH = random(-90, 91); // Generate random pitch angle between -90 and 90 degrees
+  YAW = random(0, 361);    // Generate random yaw angle between 0 and 360 degrees
   COUNT++;
 
-  // Delay
-  delay(500);
 }
+
+
+

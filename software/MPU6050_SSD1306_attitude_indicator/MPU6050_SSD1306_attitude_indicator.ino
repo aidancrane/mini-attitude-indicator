@@ -73,7 +73,11 @@ void loop() {
   display.clearDisplay();
   display.setCursor(0, 0);
 
-  demo();
+  updateSensors();
+
+  //demo();
+  drawHorizonOnScreen();
+
 
   display.display();
 
@@ -82,16 +86,53 @@ void loop() {
 }
 
 
-void demo() {
+// Function to convert degrees to radians
+float toRadians(float degrees) {
+  return degrees * PI / 180.0;
+}
+
+void drawHorizonOnScreen() {
+  // Replace these with your actual Euler angles in degrees
+  float x = mpu.getAngleZ();
+  float y = mpu.getAngleY();
+  float z = mpu.getAngleX();
+
+  // Convert angles to radians
+  float radX = toRadians(x);
+  float radY = toRadians(y);
+  float radZ = toRadians(z);
+
+  // Fixed length for the line
+  float lineLength = 20.0;
+
+
+  // Calculate the endpoint of the line based on angles
+  float endX = lineLength * cos(radY) * cos(radX);
+  float endY = lineLength * cos(radY) * sin(radX);
+
+  // Correct endpoint coordinates if angle is greater than 90 degrees or less than -90 degrees
+  if (y > 90 || y < -90) {
+    endX *= -1;
+  }
+
+  // Map endpoint coordinates to screen coordinates
+  int screenX = (SCREEN_WIDTH / 2) + (endX * (SCREEN_WIDTH / 2));
+  int screenY = (SCREEN_HEIGHT / 2) - (endY * (SCREEN_HEIGHT / 2));
+
+  display.drawLine(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, screenX, screenY, SSD1306_WHITE);
+}
+
+void updateSensors() {
   mpu.update();
+}
 
-
+void demo() {
   if(millis() - timer > 10){
 
-    display.println(F("ANGLE"));
-    display.print(F("X: "));display.println(mpu.getAngleX());
-    display.print("Y: ");display.println(mpu.getAngleY());
-    display.print("Z: ");display.println(mpu.getAngleZ());
+    // display.println(F("ANGLE"));
+    // display.print(F("X: "));display.println(mpu.getAngleX());
+    // display.print("Y: ");display.println(mpu.getAngleY());
+    // display.print("Z: ");display.println(mpu.getAngleZ());
 
     Serial.print(F("X:"));Serial.print(mpu.getAngleX());
     Serial.print(",Y:");Serial.print(mpu.getAngleY());

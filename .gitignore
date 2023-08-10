@@ -1,3 +1,6 @@
 
 software/arduino-ide_nightly-20230730_Windows_64bit/*
 software/example_ssd1306_128x64_spi/*
+software/mpu_example/*
+software/MPU6050_SSD1306_angle_demo/*
+software/MPU6050_SSD1306_attitude_indicator/.theia/launch.json

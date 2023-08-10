@@ -108,28 +108,31 @@ void drawHorizonOnScreen() {
   // Calculate the maximum line length based on the distance to the screen edge
   float maxLineLength = screenRadius / cos(radY);
 
-  // Calculate the endpoint of the line based on angles
-  float endX = maxLineLength * cos(radY) * cos(radX);
-  float endY = maxLineLength * cos(radY) * sin(radX);
+  // Calculate the endpoint of the line on the positive side
+  float endXPos = maxLineLength * cos(radY) * cos(radX);
+  float endYPos = maxLineLength * cos(radY) * sin(radX);
+
+  // Calculate the endpoint of the line on the negative side
+  float endXNeg = maxLineLength * cos(radY + PI) * cos(radX);
+  float endYNeg = maxLineLength * cos(radY + PI) * sin(radX);
 
   // Correct endpoint coordinates if angle is greater than 90 degrees or less than -90 degrees
   if (y > 90 || y < -90) {
-    endX *= -1;
+    endXPos *= -1;
+    endXNeg *= -1;
   }
 
   // Map endpoint coordinates to screen coordinates
-  int screenX = (SCREEN_WIDTH / 2) + (endX * (SCREEN_WIDTH / 2) / screenRadius);
-  int screenY = (SCREEN_HEIGHT / 2) - (endY * (SCREEN_HEIGHT / 2) / screenRadius);
+  int screenXPos = (SCREEN_WIDTH / 2) + (endXPos * (SCREEN_WIDTH / 2) / screenRadius);
+  int screenYPos = (SCREEN_HEIGHT / 2) - (endYPos * (SCREEN_HEIGHT / 2) / screenRadius);
+  
+  int screenXNeg = (SCREEN_WIDTH / 2) + (endXNeg * (SCREEN_WIDTH / 2) / screenRadius);
+  int screenYNeg = (SCREEN_HEIGHT / 2) - (endYNeg * (SCREEN_HEIGHT / 2) / screenRadius);
 
-  display.drawLine(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, screenX, screenY, SSD1306_WHITE);
+  // Draw lines on both sides
+  display.drawLine(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, screenXPos, screenYPos, SSD1306_WHITE);
+  display.drawLine(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, screenXNeg, screenYNeg, SSD1306_WHITE);
 
-  //display.drawLine(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, screenXNeg, screenYNeg, SSD1306_WHITE);
-
-  // int16_t x0
-  // int16_t y0
-  // int16_t x1
-  // int16_t y1
-  // uint16_t color
 
 }
 

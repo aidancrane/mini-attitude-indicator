@@ -75,7 +75,7 @@ void loop() {
 
   updateSensors();
 
-  //demo();
+  demo();
   drawHorizonOnScreen();
 
 
@@ -92,10 +92,10 @@ float toRadians(float degrees) {
 }
 
 void drawHorizonOnScreen() {
-  // Replace these with your actual Euler angles in degrees
-  float x = mpu.getAngleZ();
+
+  float x = mpu.getAngleZ(); // x and z are reversed due to the orientation of the sensor.
   float y = mpu.getAngleY();
-  float z = mpu.getAngleX();
+  float z = mpu.getAngleX(); // x and z are reversed due to the orientation of the sensor.
 
   // Convert angles to radians
   float radX = toRadians(x);
@@ -125,15 +125,16 @@ void drawHorizonOnScreen() {
   // Map endpoint coordinates to screen coordinates
   int screenXPos = (SCREEN_WIDTH / 2) + (endXPos * (SCREEN_WIDTH / 2) / screenRadius);
   int screenYPos = (SCREEN_HEIGHT / 2) - (endYPos * (SCREEN_HEIGHT / 2) / screenRadius);
-  
+
   int screenXNeg = (SCREEN_WIDTH / 2) + (endXNeg * (SCREEN_WIDTH / 2) / screenRadius);
   int screenYNeg = (SCREEN_HEIGHT / 2) - (endYNeg * (SCREEN_HEIGHT / 2) / screenRadius);
 
-  // Draw lines on both sides
-  display.drawLine(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, screenXPos, screenYPos, SSD1306_WHITE);
-  display.drawLine(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, screenXNeg, screenYNeg, SSD1306_WHITE);
+  // Offset the Y coordinate based on the Y angle
+  int yOffset = (y * (SCREEN_HEIGHT / 2) / 90) * -1;
 
-
+  // Draw lines on both sides with offset
+  display.drawLine(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + yOffset, screenXPos, screenYPos + yOffset, SSD1306_WHITE);
+  display.drawLine(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + yOffset, screenXNeg, screenYNeg + yOffset, SSD1306_WHITE);
 }
 
 void updateSensors() {
@@ -143,10 +144,10 @@ void updateSensors() {
 void demo() {
   if(millis() - timer > 10){
 
-    // display.println(F("ANGLE"));
-    // display.print(F("X: "));display.println(mpu.getAngleX());
-    // display.print("Y: ");display.println(mpu.getAngleY());
-    // display.print("Z: ");display.println(mpu.getAngleZ());
+    display.println(F("ANGLE"));
+    display.print(F("X: "));display.println(mpu.getAngleX());
+    display.print("Y: ");display.println(mpu.getAngleY());
+    display.print("Z: ");display.println(mpu.getAngleZ());
 
     Serial.print(F("X:"));Serial.print(mpu.getAngleX());
     Serial.print(",Y:");Serial.print(mpu.getAngleY());

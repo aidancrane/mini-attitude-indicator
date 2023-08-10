@@ -102,13 +102,15 @@ void drawHorizonOnScreen() {
   float radY = toRadians(y);
   float radZ = toRadians(z);
 
-  // Fixed length for the line
-  float lineLength = 20.0;
+  // Calculate the distance from the center to the edge of the screen
+  float screenRadius = min(SCREEN_WIDTH, SCREEN_HEIGHT) / 2.0;
 
+  // Calculate the maximum line length based on the distance to the screen edge
+  float maxLineLength = screenRadius / cos(radY);
 
   // Calculate the endpoint of the line based on angles
-  float endX = lineLength * cos(radY) * cos(radX);
-  float endY = lineLength * cos(radY) * sin(radX);
+  float endX = maxLineLength * cos(radY) * cos(radX);
+  float endY = maxLineLength * cos(radY) * sin(radX);
 
   // Correct endpoint coordinates if angle is greater than 90 degrees or less than -90 degrees
   if (y > 90 || y < -90) {
@@ -116,10 +118,19 @@ void drawHorizonOnScreen() {
   }
 
   // Map endpoint coordinates to screen coordinates
-  int screenX = (SCREEN_WIDTH / 2) + (endX * (SCREEN_WIDTH / 2));
-  int screenY = (SCREEN_HEIGHT / 2) - (endY * (SCREEN_HEIGHT / 2));
+  int screenX = (SCREEN_WIDTH / 2) + (endX * (SCREEN_WIDTH / 2) / screenRadius);
+  int screenY = (SCREEN_HEIGHT / 2) - (endY * (SCREEN_HEIGHT / 2) / screenRadius);
 
   display.drawLine(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, screenX, screenY, SSD1306_WHITE);
+
+  //display.drawLine(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, screenXNeg, screenYNeg, SSD1306_WHITE);
+
+  // int16_t x0
+  // int16_t y0
+  // int16_t x1
+  // int16_t y1
+  // uint16_t color
+
 }
 
 void updateSensors() {

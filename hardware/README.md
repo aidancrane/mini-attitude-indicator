@@ -9,3 +9,4 @@ For the Attitude Indicator you will need,
 - An 18650 battery.
 - A TP4056 Lithium Battery Charger Module, I used [this one](https://www.aliexpress.com/item/1005005512011487.html) but you could use one with a different USB connector.
 - A 3D printer for the case.
+- Four screws.

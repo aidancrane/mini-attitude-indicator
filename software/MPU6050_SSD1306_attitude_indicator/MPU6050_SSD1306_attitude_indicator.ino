@@ -75,7 +75,7 @@ void loop() {
 
   updateSensors();
 
-  demo();
+  //demo();
   drawHorizonOnScreen();
 
 

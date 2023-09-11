@@ -4,3 +4,5 @@ software/example_ssd1306_128x64_spi/*
 software/mpu_example/*
 software/MPU6050_SSD1306_angle_demo/*
 software/MPU6050_SSD1306_attitude_indicator/.theia/launch.json
+hardware/Attitude Indicator/Attitude Indicator-backups/*
+hardware/Attitude Indicator/fp-info-cache
